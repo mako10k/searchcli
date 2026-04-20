@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Verify searchcli",
+      "type": "shell",
+      "command": "python",
+      "args": ["-m", "pytest", "-q"],
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}
