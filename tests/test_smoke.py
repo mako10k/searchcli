@@ -1,5 +1,6 @@
-import os
 import asyncio
+import os
+import sys
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
@@ -169,7 +170,7 @@ def test_mcp_initialize_and_list_tools() -> None:
     env = os.environ.copy()
     env["PYTHONPATH"] = os.path.join(workspace, "src")
     server_params = StdioServerParameters(
-        command=os.path.join(workspace, ".venv", "bin", "python"),
+        command=sys.executable,
         args=["-u", "-m", "searchcli.mcp_server"],
         env=env,
     )

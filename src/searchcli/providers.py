@@ -105,7 +105,7 @@ def execute_search(request: SearchRequest, include_raw: bool = False) -> SearchR
     secret = require_api_key(provider.id)
 
     try:
-        with httpx.Client(timeout=request.timeout, headers={"User-Agent": "searchcli/0.1.0"}) as client:
+        with httpx.Client(timeout=request.timeout, headers={"User-Agent": "searchcli/0.1.1"}) as client:
             if provider.id == "serper":
                 response = _search_serper(client, request, secret.api_key or "")
             elif provider.id == "tavily":

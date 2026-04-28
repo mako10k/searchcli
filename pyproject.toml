@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "searchcli"
-version = "0.1.0"
+version = "0.1.1"
 description = "Structured multi-provider web search CLI for automation workflows"
 readme = "README.md"
 requires-python = ">=3.11"
