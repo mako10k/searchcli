@@ -1,0 +1,42 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "searchcli-serper-api-key",
+      "description": "SEARCHCLI_SERPER_API_KEY (unused なら空のままで可)",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "searchcli-tavily-api-key",
+      "description": "SEARCHCLI_TAVILY_API_KEY (unused なら空のままで可)",
+      "password": true
+    },
+    {
+      "type": "promptString",
+      "id": "searchcli-perplexity-api-key",
+      "description": "SEARCHCLI_PERPLEXITY_API_KEY (unused なら空のままで可)",
+      "password": true
+    }
+  ],
+  "servers": {
+    "searchcli": {
+      "type": "stdio",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "-u",
+        "-m",
+        "searchcli.mcp_server"
+      ],
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src",
+        "SEARCHCLI_SERPER_API_KEY": "${input:searchcli-serper-api-key}",
+        "SEARCHCLI_TAVILY_API_KEY": "${input:searchcli-tavily-api-key}",
+        "SEARCHCLI_PERPLEXITY_API_KEY": "${input:searchcli-perplexity-api-key}"
+      },
+      "dev": {
+        "watch": "${workspaceFolder}/src/searchcli/**/*.py"
+      }
+    }
+  }
+}

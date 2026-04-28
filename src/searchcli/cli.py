@@ -8,6 +8,7 @@ import typer
 from searchcli import __version__
 from searchcli.config import AppConfig, CONFIG_PATH, load_config, save_config
 from searchcli.errors import SearchCliError
+from searchcli.mcp_server import run_stdio_server
 from searchcli.models import SearchRequest
 from searchcli.providers import contextual_tradeoff, execute_search, get_provider, list_providers, provider_help_summary
 from searchcli.secrets import delete_api_key, env_var_name, get_api_key, keyring_backend_name, require_api_key, set_api_key
@@ -250,6 +251,12 @@ def doctor_command() -> None:
         )
     except SearchCliError as exc:
         _raise_cli_error(exc)
+
+
+@app.command("mcp")
+def mcp_command() -> None:
+    """Start an MCP server over stdio."""
+    run_stdio_server()
 
 
 @app.command("default")

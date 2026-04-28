@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "searchcli": {
+      "command": "uvx",
+      "args": [
+        "searchcli",
+        "mcp"
+      ],
+      "env": {
+        "SEARCHCLI_SERPER_API_KEY": "${SEARCHCLI_SERPER_API_KEY:-}",
+        "SEARCHCLI_TAVILY_API_KEY": "${SEARCHCLI_TAVILY_API_KEY:-}",
+        "SEARCHCLI_PERPLEXITY_API_KEY": "${SEARCHCLI_PERPLEXITY_API_KEY:-}"
+      }
+    }
+  }
+}

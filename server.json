@@ -1,0 +1,61 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.mako10k/searchcli",
+  "description": "Structured multi-provider web search MCP server with Serper, Tavily, and Perplexity backends.",
+  "title": "searchcli",
+  "websiteUrl": "https://github.com/mako10k/searchcli",
+  "repository": {
+    "url": "https://github.com/mako10k/searchcli",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "searchcli",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        }
+      ],
+      "environmentVariables": [
+        {
+          "name": "SEARCHCLI_SERPER_API_KEY",
+          "description": "Serper API key for URL-centric web search.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "SEARCHCLI_TAVILY_API_KEY",
+          "description": "Tavily API key for search plus answer workflows.",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "SEARCHCLI_PERPLEXITY_API_KEY",
+          "description": "Perplexity API key for answer-oriented web search.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "tool": "manual-prep",
+      "version": "0.1.0",
+      "build_info": {
+        "repository": "mako10k/searchcli",
+        "distribution": "pypi",
+        "transport": "stdio"
+      }
+    }
+  }
+}

@@ -10,6 +10,7 @@
 - エラー時は JSON と復旧案を標準エラーへ出力
 - API キーは OS キーチェーンへ保存し、環境変数にも対応
 - 登録先 URL を `searchcli providers` で確認可能
+- stdio transport の MCP server としても起動可能
 
 ## どの provider を選ぶか
 
@@ -101,6 +102,31 @@ searchcli config set-timeout 30
 searchcli doctor
 searchcli auth where serper
 ```
+
+### MCP server
+
+```bash
+searchcli mcp
+```
+
+MCP クライアントからは stdio command として `searchcli`、args に `mcp` を指定します。公開している tool は次の 3 つです。
+
+- `search`: 既存の searchcli search と同じ検索機能を返す
+- `providers`: active provider 優先の一覧と選び方を返す
+- `doctor`: 現在の config と認証状態を返す
+
+## IDE 公開準備
+
+このリポジトリには主要 IDE 向けの公開準備として次を含めています。
+
+- VS Code 用の workspace MCP 設定: `.vscode/mcp.json`
+- Claude Code 用の project-scope MCP 設定: `.mcp.json`
+- Official MCP Registry 向けの server metadata: `server.json`
+- IDE ごとの配布手順と設定例: `docs/ide-publishing.md`
+- version ルールと初期公開版の定義: `VERSIONING.md`, `CHANGELOG.md`
+- tag push で PyPI と MCP Registry へ publish する workflow: `.github/workflows/release.yml`
+
+想定している公開先は VS Code、Claude Code、Windsurf、Cursor 系です。公開フローは `vX.Y.Z` タグ push を起点にし、PyPI publish の後に同じ version で registry publish する前提です。
 
 ## 出力形式
 

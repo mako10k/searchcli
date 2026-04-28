@@ -1,5 +1,13 @@
+import os
+import asyncio
+
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
 from searchcli import cli as cli_module
 from searchcli.config import AppConfig
+from searchcli.errors import SearchCliError
+from searchcli.mcp_server import SearchCliMcpServer, create_mcp_app
+from searchcli.models import SearchResponse
 from typer.testing import CliRunner
 
 from searchcli.cli import app
@@ -154,3 +162,70 @@ def test_auth_set_second_provider_accepts_explicit_default_provider(monkeypatch)
     assert result.exit_code == 0
     assert saved["provider"] == "tavily"
     assert '"default_provider": "tavily"' in result.stdout
+
+
+def test_mcp_initialize_and_list_tools() -> None:
+    workspace = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    env = os.environ.copy()
+    env["PYTHONPATH"] = os.path.join(workspace, "src")
+    server_params = StdioServerParameters(
+        command=os.path.join(workspace, ".venv", "bin", "python"),
+        args=["-u", "-m", "searchcli.mcp_server"],
+        env=env,
+    )
+
+    async def run_check() -> None:
+        async with stdio_client(server_params) as (read, write):
+            async with ClientSession(read, write) as session:
+                initialize_response = await session.initialize()
+                assert initialize_response.serverInfo.name == "searchcli"
+                assert initialize_response.protocolVersion == "2025-11-25"
+
+                tools_response = await session.list_tools()
+                names = [tool.name for tool in tools_response.tools]
+                assert names == ["search", "providers", "doctor"]
+
+    asyncio.run(run_check())
+
+
+def test_mcp_search_tool_uses_existing_search_flow(monkeypatch) -> None:
+    server = SearchCliMcpServer()
+
+    monkeypatch.setattr("searchcli.mcp_server.load_config", lambda: AppConfig(default_provider="tavily", timeout_seconds=15.0))
+
+    captured: dict[str, object] = {}
+
+    def fake_execute_search(request, include_raw: bool = False) -> SearchResponse:
+        captured["request"] = request
+        captured["include_raw"] = include_raw
+        return SearchResponse(provider=request.provider, query=request.query, answer="ok", results=[])
+
+    monkeypatch.setattr("searchcli.mcp_server.execute_search", fake_execute_search)
+
+    payload = server.search("latest ai safety", include_raw=True)
+
+    assert payload["provider"] == "tavily"
+    assert payload["query"] == "latest ai safety"
+    request = captured["request"]
+    assert request.provider == "tavily"
+    assert request.timeout == 15.0
+    assert captured["include_raw"] is True
+
+
+def test_mcp_search_tool_returns_structured_error(monkeypatch) -> None:
+    server = SearchCliMcpServer()
+
+    monkeypatch.setattr("searchcli.mcp_server.load_config", lambda: AppConfig())
+    monkeypatch.setattr(
+        "searchcli.mcp_server.execute_search",
+        lambda request, include_raw=False: (_ for _ in ()).throw(
+            SearchCliError(code="auth_missing", message="missing", recovery=["set key"])
+        ),
+    )
+
+    app = create_mcp_app(server)
+    tool = app._tool_manager.get_tool("search")
+    response = tool.fn(query="latest ai safety")
+
+    assert response.isError is True
+    assert response.structuredContent["error"]["code"] == "auth_missing"
