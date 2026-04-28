@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.1] - 2026-04-28
+## [0.1.2] - 2026-04-28
 
 - Initial public release for searchcli.
 - Multi-provider search CLI with Serper, Tavily, and Perplexity support.
@@ -8,3 +8,4 @@
 - VS Code workspace MCP config and Claude Code project-scope MCP config.
 - Initial publication metadata for PyPI and Official MCP Registry.
 - CI-compatible MCP smoke test execution without a hard-coded `.venv` interpreter path.
+- PyPI trusted publishing workflow now emits the `pypi` environment claim.

@@ -6,7 +6,7 @@ searchcli は Semantic Versioning を使います。
 
 - Git tag format: `vX.Y.Z`
 - package version format: `X.Y.Z`
-- 初期公開版: `0.1.1`
+- 初期公開版: `0.1.2`
 
 ## Meaning
 
